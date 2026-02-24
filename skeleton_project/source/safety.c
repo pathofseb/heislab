@@ -10,6 +10,7 @@
 void emergency_stop() {
     if(elevio_stopButton() == 1){
         elevio_motorDirection(DIRN_STOP);
+        elevio_stopLamp(1);
 
         clear_orders();
         ignore_orders();
@@ -21,6 +22,7 @@ void emergency_stop() {
         while(1){
             if((float)((clock() - start_time)/CLOCKS_PER_SEC) >= 3.0){
                 printf("[EMERGENCY STOP] Clock has expired");
+                elevio_stopLamp(0);
                 break;
             }
             if(elevio_stopButton() == 1){

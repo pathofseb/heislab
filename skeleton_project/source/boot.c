@@ -18,6 +18,9 @@ void find_position_on_boot() {
         }
     }else{
     CURRENT_FLOOR = elevio_floorSensor();
+    if(CURRENT_FLOOR == -1){
+        printf("[ERROR] CURRENT_FLOOR is set to -1!");
+    }
     printf("[BOOT] Set current floor without movement");
     }
 }
