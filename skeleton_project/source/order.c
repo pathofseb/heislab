@@ -30,10 +30,16 @@ void remove_order(int floor, ButtonType button) {
     }
 }
 
-// Clear all orders
+// Clear all orders at a specific floor
 void clear_floor_orders(int floor) {
     for (int i = 0; i < N_BUTTONS; i++) {
         orders[floor][i] = 0;
+    }
+}
+
+void clear_orders(void) {
+    for (int i = 0; i < N_FLOORS; i++) {
+        clear_floor_orders(i);
     }
 }
 
@@ -92,4 +98,6 @@ void calculate_direction() {
         direction = DIRN_STOP;
     }
 }
+
+
 

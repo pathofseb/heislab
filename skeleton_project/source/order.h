@@ -5,6 +5,7 @@
 void add_order(int floor, ButtonType button);
 void remove_order(int floor, ButtonType button);
 void clear_floor_orders(int floor);
+void clear_orders(void);
 
 int has_order_at_floor(int floor);
 int has_order(int floor, ButtonType button);
