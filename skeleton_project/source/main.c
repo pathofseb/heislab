@@ -2,8 +2,10 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <time.h>
-#include "driver/elevio.h"
 
+#include "driver/elevio.h"
+#include "boot.h"
+#include "utils.h"
 
 
 int main(){
