@@ -16,7 +16,17 @@ void emergency_stop() {
         
         while(elevio_stopButton() == 1){}
 
-        sleep(3);
-        emergency_stop();
+        clock_t start_time = clock();
+
+        while(1){
+            if((float)((clock() - start_time)/CLOCKS_PER_SEC) >= 3.0){
+                printf("[EMERGENCY STOP] Clock has expired");
+                break;
+            }
+            if(elevio_stopButton() == 1){
+                start_time = clock();
+                printf("[EMERGENCY STOP] Clock has been reset");
+            }
+        }
     }
 }
