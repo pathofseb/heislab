@@ -91,7 +91,7 @@ int has_any_orders(void) {
 
 
 // Calculate the direction of movement based on current floor and destination floor
-void calculate_direction() {
+void calculate_direction(int current_floor, int destination_floor) {
     if (destination_floor > current_floor) {
         direction = DIRN_UP;
     } else if (destination_floor < current_floor) {
