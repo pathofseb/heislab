@@ -19,6 +19,7 @@ typedef enum {
 
 static ElevatorState elevator_state = STATE_IDLE;
 static MotorDirection current_direction = DIRN_STOP;
+static int last_processed_floor = -1;  // Track which floor we last processed to avoid double-triggering
 
 // Function prototypes
 void poll_buttons(void);
@@ -99,6 +100,7 @@ int main() {
                             current_direction == DIRN_UP ? "UP" : "DOWN");
                         elevio_motorDirection(current_direction);
                         elevator_state = STATE_MOVING;
+                        last_processed_floor = -1;  // Reset so we can process next floor
                     }
                 } else {
                     // Stay idle
@@ -107,24 +109,31 @@ int main() {
                 break;
 
             case STATE_MOVING:
-                // Check if we've arrived at a floor
-                if (CURRENT_FLOOR != -1 && should_stop_at_floor(CURRENT_FLOOR, current_direction)) {
-                    printf("[MOVING] Arrived at floor %d with orders\n", CURRENT_FLOOR);
+                // Check if we've NEWLY arrived at a floor (not already processed)
+                if (CURRENT_FLOOR != -1 && CURRENT_FLOOR != last_processed_floor) {
+                    // We've arrived at a new floor, check if we should stop
+                    if (should_stop_at_floor(CURRENT_FLOOR, current_direction)) {
+                        printf("[MOVING] Arrived at floor %d with orders\n", CURRENT_FLOOR);
 
-                    // Stop the motor
-                    elevio_motorDirection(DIRN_STOP);
+                        // Stop the motor
+                        elevio_motorDirection(DIRN_STOP);
 
-                    // Open door and transition to DOOR_OPEN state
-                    elevator_state = STATE_DOOR_OPEN;
-                    open_door(CURRENT_FLOOR);
-                    clear_floor_orders(CURRENT_FLOOR);
+                        // Open door and transition to DOOR_OPEN state
+                        elevator_state = STATE_DOOR_OPEN;
+                        open_door(CURRENT_FLOOR);
+                        clear_floor_orders(CURRENT_FLOOR);
 
-                    // Turn off button lamps for this floor
-                    for (int b = 0; b < N_BUTTONS; b++) {
-                        elevio_buttonLamp(CURRENT_FLOOR, b, 0);
+                        // Turn off button lamps for this floor
+                        for (int b = 0; b < N_BUTTONS; b++) {
+                            elevio_buttonLamp(CURRENT_FLOOR, b, 0);
+                        }
+
+                        // Mark this floor as processed
+                        last_processed_floor = CURRENT_FLOOR;
+
+                        // CRITICAL: break here to prevent direction change logic from running
+                        break;
                     }
-                    // CRITICAL: break here to prevent direction change logic from running
-                    break;
                 }
 
                 // Only check direction changes if we didn't stop at a floor
@@ -174,6 +183,7 @@ int main() {
                                 current_direction == DIRN_UP ? "UP" : "DOWN");
                             elevio_motorDirection(current_direction);
                             elevator_state = STATE_MOVING;
+                            last_processed_floor = -1;  // Reset so we can process next floor
                         }
                     } else {
                         // No more orders
