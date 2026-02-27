@@ -110,7 +110,7 @@ int main() {
                 // Check if we've arrived at a floor
                 if (CURRENT_FLOOR != -1) {
                     // Should we stop at this floor?
-                    if (has_order_at_floor(CURRENT_FLOOR)) {
+                    if (should_stop_at_floor(CURRENT_FLOOR, current_direction)) {
                         printf("[MOVING] Arrived at floor %d with orders\n", CURRENT_FLOOR);
 
                         // Stop the motor

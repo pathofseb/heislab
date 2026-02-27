@@ -52,6 +52,46 @@ int has_order_at_floor(int floor) {
     return 0;
 }
 
+// Check if elevator should stop at a floor given its current direction
+int should_stop_at_floor(int floor, MotorDirection dir) {
+    // Always stop for inside (cab) orders
+    if (orders[floor][BUTTON_CAB]) {
+        return 1;
+    }
+
+    // Check if there are any orders ahead in the current direction
+    int orders_ahead = 0;
+    if (dir == DIRN_UP) {
+        for (int i = floor + 1; i < N_FLOORS; i++) {
+            if (has_order_at_floor(i)) {
+                orders_ahead = 1;
+                break;
+            }
+        }
+    } else if (dir == DIRN_DOWN) {
+        for (int i = floor - 1; i >= 0; i--) {
+            if (has_order_at_floor(i)) {
+                orders_ahead = 1;
+                break;
+            }
+        }
+    }
+
+    // If no orders ahead, stop for any order at this floor
+    if (!orders_ahead) {
+        return has_order_at_floor(floor);
+    }
+
+    // Otherwise, only stop for orders in the current direction
+    if (dir == DIRN_UP) {
+        return orders[floor][BUTTON_HALL_UP];
+    } else if (dir == DIRN_DOWN) {
+        return orders[floor][BUTTON_HALL_DOWN];
+    }
+
+    return 0;
+}
+
 // Check spesific order
 int has_order(int floor, ButtonType button) {
     return orders[floor][button];
