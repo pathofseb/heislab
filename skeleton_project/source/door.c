@@ -42,4 +42,6 @@ int should_close_door(void) {
     if (time(NULL) - door_open_time >= 3) {
         return 1; // Time to close the door
     }
+
+    return 0; // Still waiting
 }

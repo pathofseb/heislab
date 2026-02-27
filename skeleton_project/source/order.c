@@ -9,9 +9,6 @@
 #define N_FLOORS 4
 #define N_BUTTONS 3
 
-static int current_floor;
-static int prev_floor;
-static int destination_floor;
 static int direction;
 
 // 2D array, order array
@@ -91,13 +88,16 @@ int has_any_orders(void) {
 
 
 // Calculate the direction of movement based on current floor and destination floor
-void calculate_direction(int current_floor, int destination_floor) {
+int calculate_direction(int current_floor, int destination_floor) {
     if (destination_floor > current_floor) {
         direction = DIRN_UP;
+        return DIRN_UP;
     } else if (destination_floor < current_floor) {
         direction = DIRN_DOWN;
+        return DIRN_DOWN;
     } else {
         direction = DIRN_STOP;
+        return DIRN_STOP;
     }
 }
 

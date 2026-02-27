@@ -13,14 +13,15 @@ void find_position_on_boot(void) {
             if (elevio_floorSensor() != -1){
                 CURRENT_FLOOR = elevio_floorSensor();
                 elevio_motorDirection(DIRN_STOP);
-                printf("[BOOT] Set current floor with movement");
+                printf("[BOOT] Set current floor with movement\n");
+                break;  // Exit the loop once floor is found
             }
         }
-    }else{
-    CURRENT_FLOOR = elevio_floorSensor();
-    if(CURRENT_FLOOR == -1){
-        printf("[ERROR] CURRENT_FLOOR is set to -1!");
-    }
-    printf("[BOOT] Set current floor without movement");
+    } else {
+        CURRENT_FLOOR = elevio_floorSensor();
+        if(CURRENT_FLOOR == -1){
+            printf("[ERROR] CURRENT_FLOOR is set to -1!\n");
+        }
+        printf("[BOOT] Set current floor without movement\n");
     }
 }

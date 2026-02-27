@@ -5,7 +5,7 @@
 #include <unistd.h>
 
 #include "driver/elevio.h"
-#include "order.c"
+#include "order.h"
 
 void emergency_stop(void) {
     if(elevio_stopButton() == 1){
@@ -13,7 +13,6 @@ void emergency_stop(void) {
         elevio_stopLamp(1);
 
         clear_orders();
-        ignore_orders();
         
         while(elevio_stopButton() == 1){}
 
