@@ -108,27 +108,26 @@ int main() {
 
             case STATE_MOVING:
                 // Check if we've arrived at a floor
-                if (CURRENT_FLOOR != -1) {
-                    // Should we stop at this floor?
-                    if (should_stop_at_floor(CURRENT_FLOOR, current_direction)) {
-                        printf("[MOVING] Arrived at floor %d with orders\n", CURRENT_FLOOR);
+                if (CURRENT_FLOOR != -1 && should_stop_at_floor(CURRENT_FLOOR, current_direction)) {
+                    printf("[MOVING] Arrived at floor %d with orders\n", CURRENT_FLOOR);
 
-                        // Stop the motor
-                        elevio_motorDirection(DIRN_STOP);
+                    // Stop the motor
+                    elevio_motorDirection(DIRN_STOP);
 
-                        // Open door
-                        elevator_state = STATE_DOOR_OPEN;
-                        open_door(CURRENT_FLOOR);
-                        clear_floor_orders(CURRENT_FLOOR);
+                    // Open door and transition to DOOR_OPEN state
+                    elevator_state = STATE_DOOR_OPEN;
+                    open_door(CURRENT_FLOOR);
+                    clear_floor_orders(CURRENT_FLOOR);
 
-                        // Turn off button lamps for this floor
-                        for (int b = 0; b < N_BUTTONS; b++) {
-                            elevio_buttonLamp(CURRENT_FLOOR, b, 0);
-                        }
+                    // Turn off button lamps for this floor
+                    for (int b = 0; b < N_BUTTONS; b++) {
+                        elevio_buttonLamp(CURRENT_FLOOR, b, 0);
                     }
+                    // CRITICAL: break here to prevent direction change logic from running
+                    break;
                 }
 
-                // Check if we need to change direction or stop
+                // Only check direction changes if we didn't stop at a floor
                 int next_in_direction = next_floor_in_direction(CURRENT_FLOOR, current_direction);
                 if (next_in_direction == CURRENT_FLOOR && !has_order_at_floor(CURRENT_FLOOR)) {
                     // No more orders in current direction
@@ -147,6 +146,11 @@ int main() {
                 break;
 
             case STATE_DOOR_OPEN:
+                // CRITICAL: Don't allow movement while obstruction is active
+                if (elevio_obstruction()) {
+                    elevio_motorDirection(DIRN_STOP);
+                }
+
                 // Check if door should close
                 if (should_close_door()) {
                     printf("[DOOR] Closing door at floor %d\n", CURRENT_FLOOR);
