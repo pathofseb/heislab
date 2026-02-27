@@ -6,7 +6,7 @@
 #include "driver/elevio.h"
 #include "utils.h"
 
-void find_position_on_boot() {
+void find_position_on_boot(void) {
     if(elevio_floorSensor() == -1) {
         elevio_motorDirection(DIRN_UP);
         while(1){

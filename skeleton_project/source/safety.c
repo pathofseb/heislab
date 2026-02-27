@@ -7,7 +7,7 @@
 #include "driver/elevio.h"
 #include "order.c"
 
-void emergency_stop() {
+void emergency_stop(void) {
     if(elevio_stopButton() == 1){
         elevio_motorDirection(DIRN_STOP);
         elevio_stopLamp(1);
