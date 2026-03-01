@@ -73,6 +73,7 @@ int main() {
             update_floor_indicator();
         }
 
+
         // State machine
         switch (elevator_state) {
             case STATE_IDLE:
@@ -83,8 +84,9 @@ int main() {
                     // Determine which direction to go
                     current_direction = determine_next_direction();
 
-                    // Check if we're already at an ordered floor
-                    if (CURRENT_FLOOR != -1 && has_order_at_floor(CURRENT_FLOOR)) {
+                    // Check if we're already at an ordered floor               
+                    int sensor = elevio_floorSensor();
+                    if (CURRENT_FLOOR != -1 && has_order_at_floor(CURRENT_FLOOR) && sensor != -1) { 
                         printf("[IDLE] Already at ordered floor %d, opening door\n", CURRENT_FLOOR);
                         elevator_state = STATE_DOOR_OPEN;
                         open_door(CURRENT_FLOOR);
