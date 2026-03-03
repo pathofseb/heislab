@@ -4,6 +4,7 @@
 #include <time.h>
 #include "driver/elevio.h"
 
+#include "utils.h"
 #include "order.h"
 
 #define N_FLOORS 4
@@ -40,6 +41,7 @@ void clear_orders(void) {
     for (int i = 0; i < N_FLOORS; i++) {
         clear_floor_orders(i);
     }
+    turn_off_all_lamps();
 }
 
 // Check if there are any orders at a floor
