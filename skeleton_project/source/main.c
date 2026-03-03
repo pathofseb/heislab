@@ -112,7 +112,7 @@ int main() {
 
             case STATE_MOVING:
                 // Check if we've NEWLY arrived at a floor (not already processed)
-                if (CURRENT_FLOOR != -1 && CURRENT_FLOOR != last_processed_floor) {
+                if (CURRENT_FLOOR != -1 && CURRENT_FLOOR != last_processed_floor && elevio_floorSensor() != -1) {
                     // We've arrived at a new floor, check if we should stop
                     if (should_stop_at_floor(CURRENT_FLOOR, current_direction)) {
                         printf("[MOVING] Arrived at floor %d with orders\n", CURRENT_FLOOR);
