@@ -60,6 +60,7 @@ int main() {
             emergency_stop();
             elevator_state = STATE_IDLE;
             current_direction = DIRN_STOP;
+            CURRENT_FLOOR = elevio_floorSensor();  // Update current floor after stop
             continue;
         }
 
