@@ -20,13 +20,11 @@ void emergency_stop(void) {
 
         while(1){
             if((float)((clock() - start_time)/CLOCKS_PER_SEC) >= 3.0){
-                printf("[EMERGENCY STOP] Clock has expired");
                 elevio_stopLamp(0);
                 break;
             }
             if(elevio_stopButton() == 1){
                 start_time = clock();
-                printf("[EMERGENCY STOP] Clock has been reset");
             }
         }
     }
