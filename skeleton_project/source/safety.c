@@ -30,6 +30,7 @@ void emergency_stop(void) {
         while(1){
             if((float)((clock() - start_time)/CLOCKS_PER_SEC) >= (3.0/2.0)){
                 elevio_stopLamp(0);
+                close_door(CURRENT_FLOOR);
                 break;
             }
             if(elevio_stopButton() == 1){
